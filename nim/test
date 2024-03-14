@@ -1,0 +1,37 @@
+		$(ENV_SCRIPT) "$(NIMC)" c --verbosity:2 --parallelbuild:1 -f -o:./build/android/arm64/libhello.so \
+			--app:lib --passC:--sysroot="$(SYSROOT)" --passL:--sysroot="$(SYSROOT)" \
+			--cincludes:"$(SYSROOT)/usr/include/arm64-linux-android" \
+			--cpu:arm64 --os:linux  -d:androidNDK --noMain ./hello.nim  && \
+		$(ENV_SCRIPT) "$(NIMC)" c --verbosity:2 --parallelbuild:1 -f -o:./build/android/i386/libhello.so \
+			--app:lib --passC:--sysroot="$(SYSROOT)" --passL:--sysroot="$(SYSROOT)" \
+			--cincludes:"$(SYSROOT)/usr/include/i686-linux-android" \
+			--cpu:i386 --os:linux  -d:androidNDK --noMain ./hello.nim && \
+		$(ENV_SCRIPT) "$(NIMC)" c --verbosity:2 --parallelbuild:1 -f -o:./build/android/x86_64/libhello.so \
+			--app:lib --passC:--sysroot="$(SYSROOT)" --passL:--sysroot="$(SYSROOT)" \
+			--cincludes:"$(SYSROOT)/usr/include/x86_64-linux-android" \
+			--cpu:amd64 --os:linux  -d:androidNDK --noMain ./hello.nim && \
+		$(ENV_SCRIPT) "$(NIMC)" c --verbosity:2 --parallelbuild:1 -f -o:./build/android/armv7a/libhello.so \
+			--app:lib --passC:--sysroot="$(SYSROOT)" --passL:--sysroot="$(SYSROOT)" \
+			--cincludes:"$(SYSROOT)/usr/include/arm-linux-androideabi" \
+			--cpu:arm --os:linux  -d:androidNDK --noMain ./hello.nim
+
+
+
+
+
+
+
+
+
+			arm64.linux.gcc.path = "/home/richard/Android/Sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/linux-x86_64/bin"
+arm64.linux.gcc.exe = "aarch64-linux-android30-clang"
+arm64.linux.gcc.linkerexe = "aarch64-linux-android30-clang"
+
+
+i386.linux.gcc.path = "/home/richard/Android/Sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/linux-x86_64/bin"
+i386.linux.gcc.exe = "i686-linux-android30-clang"
+i386.linux.gcc.linkerexe = "i686-linux-android30-clang"
+
+arm.linux.gcc.path = "/home/richard/Android/Sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/linux-x86_64/bin"
+arm.linux.gcc.exe = "armv7a-linux-androideabi30-clang"
+arm.linux.gcc.linkerexe = "armv7a-linux-androideabi30-clang"
