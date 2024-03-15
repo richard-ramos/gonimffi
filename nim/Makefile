@@ -52,8 +52,17 @@ main: | build deps
 	echo -e $(BUILD_MSG) "build/$@" && \
 		$(ENV_SCRIPT) "$(NIMC)" c --verbosity:3 --parallelbuild:1 -f -o:./build/android/x86_64/libhello.so \
 			--app:lib --passC:--sysroot="$(SYSROOT)" --passL:--sysroot="$(SYSROOT)" \
+			--passL:-llog \
 			--cincludes:"$(SYSROOT)/usr/include/x86_64-linux-android" \
-			--cpu:amd64 --os:linux  -d:androidNDK --noMain ./hello.nim
+			--cpu:amd64 --os:android  -d:androidNDK --noMain ./hello.nim && \
+		$(ENV_SCRIPT) "$(NIMC)" c --verbosity:3 --parallelbuild:1 -f -o:./build/android/x86/libhello.so \
+			--app:lib --passC:--sysroot="$(SYSROOT)" --passL:--sysroot="$(SYSROOT)" \
+			--cincludes:"$(SYSROOT)/usr/include/i686-linux-android" \
+			--passL:-llog \
+			--cpu:i386 --os:android  -d:androidNDK --noMain ./hello.nim && \
+		mkdir -p ../mobile/AwesomeProject/android/app/src/main/jniLibs/ && \
+		rm -Rf ../mobile/AwesomeProject/android/app/src/main/jniLibs/* && \
+		cp -R ./build/android/* ../mobile/AwesomeProject/android/app/src/main/jniLibs/.
 clean: | clean-common
 	rm -rf build/*
 

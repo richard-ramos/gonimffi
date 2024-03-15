@@ -9,14 +9,6 @@ import library.Library
 class HelloModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
     override fun getName() = "HelloModule"
 
-
-    companion object {
-        init {
-            System.loadLibrary("hello")
-        }
-    }
-
-
     @ReactMethod
     fun start() {
         Library.helloFromGo();
