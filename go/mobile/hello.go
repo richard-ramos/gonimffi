@@ -6,7 +6,6 @@ package library
 */
 import "C"
 
-//export HelloFromGo
 func HelloFromGo() {
 	C.hello()
 }

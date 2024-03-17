@@ -12,6 +12,9 @@ BUILD_SYSTEM_DIR := vendor/nimbus-build-system
 	update \
 	lib \
 	main \
+	build-mobile \
+	build-desktop \
+	copy \
 	clean
 
 ifeq ($(NIM_PARAMS),)
@@ -48,7 +51,7 @@ update: | update-common
 SYSROOT = /home/richard/Android/Sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/linux-x86_64/sysroot/
 
 # building Nim programs
-main: | build deps
+build-mobile: | deps
 	echo -e $(BUILD_MSG) "build/$@" && \
 		$(ENV_SCRIPT) "$(NIMC)" c --verbosity:3 --parallelbuild:1 -f -o:./build/android/x86_64/libhello.so \
 			--app:lib --passC:--sysroot="$(SYSROOT)" --passL:--sysroot="$(SYSROOT)" \
@@ -59,10 +62,20 @@ main: | build deps
 			--app:lib --passC:--sysroot="$(SYSROOT)" --passL:--sysroot="$(SYSROOT)" \
 			--cincludes:"$(SYSROOT)/usr/include/i686-linux-android" \
 			--passL:-llog \
-			--cpu:i386 --os:android  -d:androidNDK --noMain ./hello.nim && \
+			--cpu:i386 --os:android  -d:androidNDK --noMain ./hello.nim
+
+build-desktop: | deps
+		$(ENV_SCRIPT) "$(NIMC)" c --verbosity:3 --parallelbuild:1 -f -o:./build/linux/x86_64/libhello.so \
+			--app:lib --cpu:amd64 --os:linux --noMain ./hello.nim
+
+copy: build-mobile build-desktop
 		mkdir -p ../mobile/AwesomeProject/android/app/src/main/jniLibs/ && \
 		rm -Rf ../mobile/AwesomeProject/android/app/src/main/jniLibs/* && \
-		cp -R ./build/android/* ../mobile/AwesomeProject/android/app/src/main/jniLibs/.
+		cp -R ./build/android/* ../mobile/AwesomeProject/android/app/src/main/jniLibs/. && \
+		cp ./build/linux/x86_64/*.so ../desktop/.
+
+main: | copy
+
 clean: | clean-common
 	rm -rf build/*
 
