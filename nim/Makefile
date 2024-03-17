@@ -62,7 +62,17 @@ build-mobile: | deps
 			--app:lib --passC:--sysroot="$(SYSROOT)" --passL:--sysroot="$(SYSROOT)" \
 			--cincludes:"$(SYSROOT)/usr/include/i686-linux-android" \
 			--passL:-llog \
-			--cpu:i386 --os:android  -d:androidNDK --noMain ./hello.nim
+			--cpu:i386 --os:android  -d:androidNDK --noMain ./hello.nim && \
+		$(ENV_SCRIPT) "$(NIMC)" c --verbosity:3 --parallelbuild:1 -f -o:./build/android/arm64-v8a/libhello.so \
+			--app:lib --passC:--sysroot="$(SYSROOT)" --passL:--sysroot="$(SYSROOT)" \
+			--cincludes:"$(SYSROOT)/usr/include/aarch64-linux-android" \
+			--passL:-llog \
+			--cpu:arm64 --os:android  -d:androidNDK --noMain ./hello.nim && \
+		$(ENV_SCRIPT) "$(NIMC)" c --verbosity:3 --parallelbuild:1 -f -o:./build/android/armeabi-v7a/libhello.so \
+			--app:lib --passC:--sysroot="$(SYSROOT)" --passL:--sysroot="$(SYSROOT)" \
+			--cincludes:"$(SYSROOT)/usr/include/armv7a-linux-androideabi" \
+			--passL:-llog \
+			--cpu:arm --os:android  -d:androidNDK --noMain ./hello.nim
 
 build-desktop: | deps
 		$(ENV_SCRIPT) "$(NIMC)" c --verbosity:3 --parallelbuild:1 -f -o:./build/linux/x86_64/libhello.so \
