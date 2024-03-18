@@ -90,7 +90,7 @@ build-mobile-ios: | deps
 			--passC:"-isysroot $(IPHONE_SYSROOT)" --passL:"-isysroot $(IPHONE_SYSROOT)" \
 			--passC:-mios-version-min=$(IPHONE_MIN_VERSION) --passL:-mios-version-min=$(IPHONE_MIN_VERSION) \
 			--cincludes:"$(IPHONE_SYSROOT)/usr/include/" \
-			--cpu:arm64 --os:macosx -d:ios -d:iPhone --noMain ./hello.nim && \
+			--cpu:arm64 --os:macosx -d:ios -d:iPhone --noMain ./hello.nim
 
 build-desktop: | deps
 		$(ENV_SCRIPT) "$(NIMC)" c --verbosity:3 --parallelbuild:1 -f -o:./build/linux/x86_64/libhello.so \
