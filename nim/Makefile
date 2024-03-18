@@ -76,13 +76,21 @@ build-mobile-android: | deps
 
 IPHONE_MIN_VERSION=16.1
 IPHONE_SIMULATOR_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator$(IPHONE_MIN_VERSION).sdk"
+IPHONE_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS$(IPHONE_MIN_VERSION).sdk"
 build-mobile-ios: | deps
+	echo -e $(BUILD_MSG) "build/$@" && \
 		$(ENV_SCRIPT) "$(NIMC)" c --verbosity:3 --parallelbuild:1 -f -o:./build/ios/simulator/hello \
 			--app:lib \
 			--passC:"-isysroot $(IPHONE_SIMULATOR_SYSROOT)" --passL:"-isysroot $(IPHONE_SIMULATOR_SYSROOT)" \
 			--passC:-mios-simulator-version-min=$(IPHONE_MIN_VERSION) --passL:-mios-simulator-version-min=$(IPHONE_MIN_VERSION) \
 			--cincludes:"$(IPHONE_SIMULATOR_SYSROOT)/usr/include/" \
-			--cpu:amd64 --os:macosx -d:ios -d:simulator -d:iPhone --noMain ./hello.nim
+			--cpu:amd64 --os:macosx -d:ios -d:simulator -d:iPhone --noMain ./hello.nim && \
+		$(ENV_SCRIPT) "$(NIMC)" c --verbosity:3 --parallelbuild:1 -f -o:./build/ios/iphone/hello \
+			--app:lib \
+			--passC:"-isysroot $(IPHONE_SYSROOT)" --passL:"-isysroot $(IPHONE_SYSROOT)" \
+			--passC:-mios-version-min=$(IPHONE_MIN_VERSION) --passL:-mios-version-min=$(IPHONE_MIN_VERSION) \
+			--cincludes:"$(IPHONE_SYSROOT)/usr/include/" \
+			--cpu:arm64 --os:macosx -d:ios -d:iPhone --noMain ./hello.nim && \
 
 build-desktop: | deps
 		$(ENV_SCRIPT) "$(NIMC)" c --verbosity:3 --parallelbuild:1 -f -o:./build/linux/x86_64/libhello.so \
