@@ -34,7 +34,7 @@ build-mobile-android:
 build-mobile-ios:
 	gomobile init && \
 	${GOBIN} get -d golang.org/x/mobile/cmd/gomobile && \
-	CGO=1 gomobile bind -v -target=ios-ldflags="-s -w" -o ./build/hello.xcframework ./mobile
+	CGO=1 gomobile bind -v -target=ios -ldflags="-s -w" -o ./build/hello.xcframework ./mobile
 
 build-desktop:
 	$(GOBIN_SHARED_LIB_CFLAGS) $(GOBIN_SHARED_LIB_CGO_LDFLAGS) ${GOBIN} build \
