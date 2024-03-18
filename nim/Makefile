@@ -51,7 +51,7 @@ update: | update-common
 SYSROOT = /home/richard/Android/Sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/linux-x86_64/sysroot/
 
 # building Nim programs
-build-mobile: | deps
+build-mobile-android: | deps
 	echo -e $(BUILD_MSG) "build/$@" && \
 		$(ENV_SCRIPT) "$(NIMC)" c --verbosity:3 --parallelbuild:1 -f -o:./build/android/x86_64/libhello.so \
 			--app:lib --passC:--sysroot="$(SYSROOT)" --passL:--sysroot="$(SYSROOT)" \
@@ -74,11 +74,20 @@ build-mobile: | deps
 			--passL:-llog \
 			--cpu:arm --os:android  -d:androidNDK --noMain ./hello.nim
 
+IPHONE_MIN_VERSION=16.1
+IPHONE_SIMULATOR_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator$(IPHONE_MIN_VERSION).sdk"
+build-mobile-ios: | deps
+		$(ENV_SCRIPT) "$(NIMC)" c --verbosity:3 --parallelbuild:1 -f -o:./build/ios/simulator/hello \
+			--app:lib \
+			--passC:-isysroot="$(SYSROOT)" --passL:-isysroot="$(SYSROOT)" \
+			--passC:-mios-simulator-version-min=$(IPHONE_MIN_VERSION) --passL:-mios-simulator-version-min=$(IPHONE_MIN_VERSION) \
+			--cpu:amd64 --os:macos -d:ios -d:simulator -d:iPhone --noMain ./hello.nim
+
 build-desktop: | deps
 		$(ENV_SCRIPT) "$(NIMC)" c --verbosity:3 --parallelbuild:1 -f -o:./build/linux/x86_64/libhello.so \
 			--app:lib --cpu:amd64 --os:linux --noMain ./hello.nim
 
-copy: build-mobile build-desktop
+copy: build-mobile-android build-desktop
 		mkdir -p ../mobile/AwesomeProject/android/app/src/main/jniLibs/ && \
 		rm -Rf ../mobile/AwesomeProject/android/app/src/main/jniLibs/* && \
 		cp -R ./build/android/* ../mobile/AwesomeProject/android/app/src/main/jniLibs/. && \
