@@ -48,61 +48,65 @@ deps: | deps-common
 update: | update-common
 	# Do you need to do something extra for this target?
 
+# =============================================================================
 SYSROOT = /home/richard/Android/Sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/linux-x86_64/sysroot/
-
-# building Nim programs
 build-mobile-android: | deps
-	echo -e $(BUILD_MSG) "build/$@" && \
-		$(ENV_SCRIPT) "$(NIMC)" c --verbosity:3 --parallelbuild:1 -f -o:./build/android/x86_64/libhello.so \
-			--app:lib --passC:--sysroot="$(SYSROOT)" --passL:--sysroot="$(SYSROOT)" \
-			--passL:-llog \
-			--cincludes:"$(SYSROOT)/usr/include/x86_64-linux-android" \
-			--cpu:amd64 --os:android  -d:androidNDK --noMain ./hello.nim && \
-		$(ENV_SCRIPT) "$(NIMC)" c --verbosity:3 --parallelbuild:1 -f -o:./build/android/x86/libhello.so \
-			--app:lib --passC:--sysroot="$(SYSROOT)" --passL:--sysroot="$(SYSROOT)" \
-			--cincludes:"$(SYSROOT)/usr/include/i686-linux-android" \
-			--passL:-llog \
-			--cpu:i386 --os:android  -d:androidNDK --noMain ./hello.nim && \
-		$(ENV_SCRIPT) "$(NIMC)" c --verbosity:3 --parallelbuild:1 -f -o:./build/android/arm64-v8a/libhello.so \
-			--app:lib --passC:--sysroot="$(SYSROOT)" --passL:--sysroot="$(SYSROOT)" \
-			--cincludes:"$(SYSROOT)/usr/include/aarch64-linux-android" \
-			--passL:-llog \
-			--cpu:arm64 --os:android  -d:androidNDK --noMain ./hello.nim && \
-		$(ENV_SCRIPT) "$(NIMC)" c --verbosity:3 --parallelbuild:1 -f -o:./build/android/armeabi-v7a/libhello.so \
-			--app:lib --passC:--sysroot="$(SYSROOT)" --passL:--sysroot="$(SYSROOT)" \
-			--cincludes:"$(SYSROOT)/usr/include/armv7a-linux-androideabi" \
-			--passL:-llog \
-			--cpu:arm --os:android  -d:androidNDK --noMain ./hello.nim
+	$(ENV_SCRIPT) "$(NIMC)" c --verbosity:3 --parallelbuild:1 -f -o:./build/android/x86_64/libhello.so \
+		--app:lib --passC:--sysroot="$(SYSROOT)" --passL:--sysroot="$(SYSROOT)" \
+		--passL:-llog \
+		--cincludes:"$(SYSROOT)/usr/include/x86_64-linux-android" \
+		--cpu:amd64 --os:android  -d:androidNDK --noMain ./hello.nim && \
+	$(ENV_SCRIPT) "$(NIMC)" c --verbosity:3 --parallelbuild:1 -f -o:./build/android/x86/libhello.so \
+		--app:lib --passC:--sysroot="$(SYSROOT)" --passL:--sysroot="$(SYSROOT)" \
+		--cincludes:"$(SYSROOT)/usr/include/i686-linux-android" \
+		--passL:-llog \
+		--cpu:i386 --os:android  -d:androidNDK --noMain ./hello.nim && \
+	$(ENV_SCRIPT) "$(NIMC)" c --verbosity:3 --parallelbuild:1 -f -o:./build/android/arm64-v8a/libhello.so \
+		--app:lib --passC:--sysroot="$(SYSROOT)" --passL:--sysroot="$(SYSROOT)" \
+		--cincludes:"$(SYSROOT)/usr/include/aarch64-linux-android" \
+		--passL:-llog \
+		--cpu:arm64 --os:android  -d:androidNDK --noMain ./hello.nim && \
+	$(ENV_SCRIPT) "$(NIMC)" c --verbosity:3 --parallelbuild:1 -f -o:./build/android/armeabi-v7a/libhello.so \
+		--app:lib --passC:--sysroot="$(SYSROOT)" --passL:--sysroot="$(SYSROOT)" \
+		--cincludes:"$(SYSROOT)/usr/include/armv7a-linux-androideabi" \
+		--passL:-llog \
+		--cpu:arm --os:android  -d:androidNDK --noMain ./hello.nim
 
-IPHONE_MIN_VERSION=16.1
-IPHONE_SIMULATOR_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator$(IPHONE_MIN_VERSION).sdk"
-IPHONE_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS$(IPHONE_MIN_VERSION).sdk"
+# Copying output into react native android project
+	mkdir -p ../mobile/AwesomeProject/android/app/src/main/jniLibs/ && \
+		rm -Rf ../mobile/AwesomeProject/android/app/src/main/jniLibs/* && \
+		cp -R ./build/android/* ../mobile/AwesomeProject/android/app/src/main/jniLibs/.
+
+
+# =============================================================================
+XCODE_PLATFORM_ROOT="/Applications/Xcode.app/Contents/Developer/Platforms"
+IPHONE_MIN_VERSION=16.
+IPHONE_SIMULATOR_SYSROOT="$(XCODE_PLATFORM_ROOT)/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator$(IPHONE_MIN_VERSION).sdk"
+IPHONE_SYSROOT="$(XCODE_PLATFORM_ROOT)/iPhoneOS.platform/Developer/SDKs/iPhoneOS$(IPHONE_MIN_VERSION).sdk"
 build-mobile-ios: | deps
-	echo -e $(BUILD_MSG) "build/$@" && \
-		$(ENV_SCRIPT) "$(NIMC)" c --verbosity:3 --parallelbuild:1 -f -o:./build/ios/simulator/hello \
-			--app:lib \
-			--passC:"-isysroot $(IPHONE_SIMULATOR_SYSROOT)" --passL:"-isysroot $(IPHONE_SIMULATOR_SYSROOT)" \
-			--passC:-mios-simulator-version-min=$(IPHONE_MIN_VERSION) --passL:-mios-simulator-version-min=$(IPHONE_MIN_VERSION) \
-			--cincludes:"$(IPHONE_SIMULATOR_SYSROOT)/usr/include/" \
-			--cpu:amd64 --os:macosx -d:ios -d:simulator -d:iPhone --noMain ./hello.nim && \
-		$(ENV_SCRIPT) "$(NIMC)" c --verbosity:3 --parallelbuild:1 -f -o:./build/ios/iphone/hello \
-			--app:lib \
-			--passC:"-isysroot $(IPHONE_SYSROOT)" --passL:"-isysroot $(IPHONE_SYSROOT)" \
-			--passC:-mios-version-min=$(IPHONE_MIN_VERSION) --passL:-mios-version-min=$(IPHONE_MIN_VERSION) \
-			--cincludes:"$(IPHONE_SYSROOT)/usr/include/" \
-			--cpu:arm64 --os:macosx -d:ios -d:iPhone --noMain ./hello.nim
+	$(ENV_SCRIPT) "$(NIMC)" c --verbosity:3 --parallelbuild:1 -f -o:./build/ios/simulator/hello \
+		--app:lib \
+		--passC:"-isysroot $(IPHONE_SIMULATOR_SYSROOT)" --passL:"-isysroot $(IPHONE_SIMULATOR_SYSROOT)" \
+		--passC:-mios-simulator-version-min=$(IPHONE_MIN_VERSION) --passL:-mios-simulator-version-min=$(IPHONE_MIN_VERSION) \
+		--cincludes:"$(IPHONE_SIMULATOR_SYSROOT)/usr/include/" \
+		--cpu:amd64 --os:macosx -d:ios -d:simulator -d:iPhone --noMain ./hello.nim && \
+	$(ENV_SCRIPT) "$(NIMC)" c --verbosity:3 --parallelbuild:1 -f -o:./build/ios/iphone/hello \
+		--app:lib \
+		--passC:"-isysroot $(IPHONE_SYSROOT)" --passL:"-isysroot $(IPHONE_SYSROOT)" \
+		--passC:-mios-version-min=$(IPHONE_MIN_VERSION) --passL:-mios-version-min=$(IPHONE_MIN_VERSION) \
+		--cincludes:"$(IPHONE_SYSROOT)/usr/include/" \
+		--cpu:arm64 --os:macosx -d:ios -d:iPhone --noMain ./hello.nim
 
-build-desktop: | deps
+# =============================================================================
+build-desktop-linux: | deps
 		$(ENV_SCRIPT) "$(NIMC)" c --verbosity:3 --parallelbuild:1 -f -o:./build/linux/x86_64/libhello.so \
 			--app:lib --cpu:amd64 --os:linux --noMain ./hello.nim
 
-copy: build-mobile-android build-desktop
-		mkdir -p ../mobile/AwesomeProject/android/app/src/main/jniLibs/ && \
-		rm -Rf ../mobile/AwesomeProject/android/app/src/main/jniLibs/* && \
-		cp -R ./build/android/* ../mobile/AwesomeProject/android/app/src/main/jniLibs/. && \
+# Copying output into desktop project
 		cp ./build/linux/x86_64/*.so ../desktop/.
 
-main: | copy
+main: |
+	echo "no target specified"
 
 clean: | clean-common
 	rm -rf build/*
