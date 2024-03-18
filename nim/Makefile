@@ -79,9 +79,10 @@ IPHONE_SIMULATOR_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/i
 build-mobile-ios: | deps
 		$(ENV_SCRIPT) "$(NIMC)" c --verbosity:3 --parallelbuild:1 -f -o:./build/ios/simulator/hello \
 			--app:lib \
-			--passC:-isysroot="$(SYSROOT)" --passL:-isysroot="$(SYSROOT)" \
+			--passC:"-isysroot $(IPHONE_SIMULATOR_SYSROOT)" --passL:"-isysroot $(IPHONE_SIMULATOR_SYSROOT)" \
 			--passC:-mios-simulator-version-min=$(IPHONE_MIN_VERSION) --passL:-mios-simulator-version-min=$(IPHONE_MIN_VERSION) \
-			--cpu:amd64 --os:macos -d:ios -d:simulator -d:iPhone --noMain ./hello.nim
+			--cincludes:"$(IPHONE_SIMULATOR_SYSROOT)/usr/include/" \
+			--cpu:amd64 --os:macosx -d:ios -d:simulator -d:iPhone --noMain ./hello.nim
 
 build-desktop: | deps
 		$(ENV_SCRIPT) "$(NIMC)" c --verbosity:3 --parallelbuild:1 -f -o:./build/linux/x86_64/libhello.so \
