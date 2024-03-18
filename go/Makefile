@@ -40,16 +40,16 @@ build-mobile-ios:
 	CGO=1 gomobile bind -v -target=ios -ldflags="-s -w" -o ./build/hello.xcframework ./mobile
 
 # =============================================================================
-build-desktop:
+build-desktop-linux:
 	$(GOBIN_SHARED_LIB_CFLAGS) $(GOBIN_SHARED_LIB_CGO_LDFLAGS) ${GOBIN} build \
 		-buildmode=c-shared \
 		-o ./build/libgohello.$(GOBIN_SHARED_LIB_EXT) ./desktop/
 
 # Removing include automatically added by cgo
 ifeq ($(detected_OS),Darwin)
-	sed -i '' -e "s/#include \"../libhello.h\"//gi" ./build/libgohello.h
+	sed -i '' -e "s/#include \"..\/..\/nim\/libhello.h\"//gi" ./build/libgohello.h
 else
-	sed -i 's/#include "..\/libhello.h"//gi' ./build/libgohello.h
+	sed -i 's/#include "..\/..\/nim\/libhello.h"//gi' ./build/libgohello.h
 endif
 
 # Copying output into desktop project

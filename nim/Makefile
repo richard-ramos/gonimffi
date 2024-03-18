@@ -49,26 +49,26 @@ update: | update-common
 	# Do you need to do something extra for this target?
 
 # =============================================================================
-SYSROOT = /home/richard/Android/Sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/linux-x86_64/sysroot/
+ANDROID_SYSROOT = /home/richard/Android/Sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/linux-x86_64/sysroot/
 build-mobile-android: | deps
 	$(ENV_SCRIPT) "$(NIMC)" c --verbosity:3 --parallelbuild:1 -f -o:./build/android/x86_64/libhello.so \
-		--app:lib --passC:--sysroot="$(SYSROOT)" --passL:--sysroot="$(SYSROOT)" \
+		--app:lib --passC:--sysroot="$(ANDROID_SYSROOT)" --passL:--sysroot="$(ANDROID_SYSROOT)" \
 		--passL:-llog \
-		--cincludes:"$(SYSROOT)/usr/include/x86_64-linux-android" \
+		--cincludes:"$(ANDROID_SYSROOT)/usr/include/x86_64-linux-android" \
 		--cpu:amd64 --os:android  -d:androidNDK --noMain ./hello.nim && \
 	$(ENV_SCRIPT) "$(NIMC)" c --verbosity:3 --parallelbuild:1 -f -o:./build/android/x86/libhello.so \
-		--app:lib --passC:--sysroot="$(SYSROOT)" --passL:--sysroot="$(SYSROOT)" \
-		--cincludes:"$(SYSROOT)/usr/include/i686-linux-android" \
+		--app:lib --passC:--sysroot="$(ANDROID_SYSROOT)" --passL:--sysroot="$(ANDROID_SYSROOT)" \
+		--cincludes:"$(ANDROID_SYSROOT)/usr/include/i686-linux-android" \
 		--passL:-llog \
 		--cpu:i386 --os:android  -d:androidNDK --noMain ./hello.nim && \
 	$(ENV_SCRIPT) "$(NIMC)" c --verbosity:3 --parallelbuild:1 -f -o:./build/android/arm64-v8a/libhello.so \
-		--app:lib --passC:--sysroot="$(SYSROOT)" --passL:--sysroot="$(SYSROOT)" \
-		--cincludes:"$(SYSROOT)/usr/include/aarch64-linux-android" \
+		--app:lib --passC:--sysroot="$(ANDROID_SYSROOT)" --passL:--sysroot="$(ANDROID_SYSROOT)" \
+		--cincludes:"$(ANDROID_SYSROOT)/usr/include/aarch64-linux-android" \
 		--passL:-llog \
 		--cpu:arm64 --os:android  -d:androidNDK --noMain ./hello.nim && \
 	$(ENV_SCRIPT) "$(NIMC)" c --verbosity:3 --parallelbuild:1 -f -o:./build/android/armeabi-v7a/libhello.so \
-		--app:lib --passC:--sysroot="$(SYSROOT)" --passL:--sysroot="$(SYSROOT)" \
-		--cincludes:"$(SYSROOT)/usr/include/armv7a-linux-androideabi" \
+		--app:lib --passC:--sysroot="$(ANDROID_SYSROOT)" --passL:--sysroot="$(ANDROID_SYSROOT)" \
+		--cincludes:"$(ANDROID_SYSROOT)/usr/include/armv7a-linux-androideabi" \
 		--passL:-llog \
 		--cpu:arm --os:android  -d:androidNDK --noMain ./hello.nim
 

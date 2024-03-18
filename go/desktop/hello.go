@@ -1,7 +1,7 @@
 package main
 
 /*
-#include "../libhello.h"
+#include "../../nim/libhello.h"
 #cgo amd64,linux,!android LDFLAGS:-L${SRCDIR}/../../nim/build/linux/x86_64 -lhello
 */
 import "C"
