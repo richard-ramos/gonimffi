@@ -80,7 +80,7 @@ build-mobile-android: | deps
 
 # =============================================================================
 XCODE_PLATFORM_ROOT="/Applications/Xcode.app/Contents/Developer/Platforms"
-IPHONE_MIN_VERSION=16.
+IPHONE_MIN_VERSION=16.1
 IPHONE_SIMULATOR_SYSROOT="$(XCODE_PLATFORM_ROOT)/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator$(IPHONE_MIN_VERSION).sdk"
 IPHONE_SYSROOT="$(XCODE_PLATFORM_ROOT)/iPhoneOS.platform/Developer/SDKs/iPhoneOS$(IPHONE_MIN_VERSION).sdk"
 build-mobile-ios: | deps
