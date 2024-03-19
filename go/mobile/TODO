@@ -1,0 +1,22 @@
+0. Crear README.md
+        b.nimFlags.add(["--os:macosx", "-d:ios", "-d:iPhone", "--dynlibOverride:SDL2"])
+if ios  "--cpu:arm64"])             addCAndLFlags(["-mios-version-min=" & b.iOSMinVersion])
+els   b.nimFlags.add("--cpu:amd64")
+            b.nimFlags.add("-d:simulator")
+            addCAndLFlags(["-mios-simulator-version-min=" & b.iOSMinVersion])
+
+            sdkPath = iOSSDKPath(b.iOSSDKVersion)
+
+
+
+proc iOSSDKPath*(version: string): string =
+    result = xCodeApp/"Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS" & version & ".sdk"
+
+proc getiOSSDKVersion(): string =
+    for f in walkDir(xCodeApp/"Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/"):
+        var dirName = splitFile(f.path).name
+        var matches = dirName.findAll(peg"\d+\.\d+")
+        if matches.len() > 0:
+            return ma
+
+ addCAndLFlags(["-isysroot", sdkPath])
