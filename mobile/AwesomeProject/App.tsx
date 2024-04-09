@@ -63,8 +63,8 @@ function App(): React.JSX.Element {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
-  const onPress = () => {
-    NativeModules.HelloModule.start();
+  const onPress = async () => {
+    console.log(await NativeModules.HelloModule.start());
   };
 
   return (

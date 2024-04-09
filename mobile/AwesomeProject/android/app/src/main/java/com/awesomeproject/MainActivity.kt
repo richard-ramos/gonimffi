@@ -9,7 +9,9 @@ class MainActivity : ReactActivity() {
 
     companion object {
         init {
-            System.loadLibrary("hello")
+            System.loadLibrary("rln")
+            System.loadLibrary("waku")
+            System.loadLibrary("hello_world_jni");
         }
     }
   /**
